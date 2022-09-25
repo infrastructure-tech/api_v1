@@ -11,18 +11,21 @@ class v1(apie.Endpoint):
 
         this.static = True
 
-        this.allowedNext.append('package')
         this.staticKWArgs.append('package_package_authenticator')
         this.staticKWArgs.append('package_upload_url')
-        this.staticKWArgs.append('package_upload_map')
+        this.staticKWArgs.append('package_upload_query_map')
+        this.staticKWArgs.append('package_upload_data_map')
         # upload_files is not static. downstream 'files' arg will grab.
         this.staticKWArgs.append('package_download_url')
-        this.staticKWArgs.append('package_download_map')
-        this.staticKWArgs.append('package_download_secondary_field')
+        this.staticKWArgs.append('package_download_query_map')
+        this.staticKWArgs.append('package_download_data_map')
+        this.staticKWArgs.append('package_download_redirect_url_field')
         this.staticKWArgs.append('package_delete_url')
-        this.staticKWArgs.append('package_delete_map')
+        this.staticKWArgs.append('package_delete_query_map')
+        this.staticKWArgs.append('package_delete_data_map')
         this.staticKWArgs.append('package_list_url')
-        this.staticKWArgs.append('package_list_map')
+        this.staticKWArgs.append('package_list_query_map')
+        this.staticKWArgs.append('package_list_data_map')
 
         this.helpText = '''\
 Version 1 of the EIT API.
