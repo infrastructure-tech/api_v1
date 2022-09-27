@@ -11,7 +11,8 @@ class v1(apie.Endpoint):
 
         this.static = True
 
-        this.staticKWArgs.append('package_package_authenticator')
+        this.allowedNext.append('package')
+        this.staticKWArgs.append('package_authenticator')
         this.staticKWArgs.append('package_upload_url')
         this.staticKWArgs.append('package_upload_query_map')
         this.staticKWArgs.append('package_upload_data_map')
