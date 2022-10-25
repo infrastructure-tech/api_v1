@@ -11,27 +11,37 @@ class v1(apie.Endpoint):
 
         this.static = True
 
-        this.allowedNext.append('package')
-        this.staticKWArgs.append('package_authenticator')
-        this.staticKWArgs.append('package_upload_url')
-        this.staticKWArgs.append('package_upload_query_map')
-        this.staticKWArgs.append('package_upload_data_map')
-        # upload_files is not static. downstream 'files' arg will grab.
-        this.staticKWArgs.append('package_download_url')
-        this.staticKWArgs.append('package_download_query_map')
-        this.staticKWArgs.append('package_download_data_map')
-        this.staticKWArgs.append('package_download_redirect_url_field')
-        this.staticKWArgs.append('package_delete_url')
-        this.staticKWArgs.append('package_delete_query_map')
-        this.staticKWArgs.append('package_delete_data_map')
-        this.staticKWArgs.append('package_list_url')
-        this.staticKWArgs.append('package_list_query_map')
-        this.staticKWArgs.append('package_list_data_map')
+        this.staticKWArgs.append('resources')
 
-        this.helpText = '''\
+    # Required Endpoint method. See that class for details.
+    def GetHelpText(this):
+        return '''\
 Version 1 of the EIT API.
-For more info, check out the allowed next Endpoints; each is a different resource which you can manage through this.
+This Endpoint utilizes APIE's Resource Paradigm in order to give you access to the resources listed in allowed_next.
 '''
+
+    def ValidateStaticArgs(this):
+        if (this.staticArgsValid):
+            return
+        
+        super().ValidateStaticArgs()
+        
+        this.allowedNext = this.resources.keys()
+
+        # Constructing a class for each resource allows us to cache the operations and any other configuration we'd like in memory.
+        # This should be faster than reconfiguring a single resource object for each request.
+        for resource in this.allowedNext:
+            classStr = f'''\
+from api_resource import resource
+class {resource}(resource):
+    def __init__(this, name="{resource}"):
+        super().__init__(name)
+
+        this.operations = {this.resources[resource]}
+'''
+            logging.debug(f"Defining resource:\n{classStr}")
+            code = compile(classStr, '', 'exec')
+            exec(code)
 
     def Call(this):
         # All we need to do right now is grab args from the config.
